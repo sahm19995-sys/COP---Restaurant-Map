@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Victoria, BC Restaurant Map</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        #map { width: 100vw; height: 100vh; }
+        .sidebar {
+            position: absolute; top: 10px; right: 10px; z-index: 1000;
+            background: white; padding: 15px; border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2); max-width: 300px; max-height: 80vh; overflow-y: auto;
+        }
+        h2 { margin-top: 0; font-size: 18px; color: #333; }
+        ul { padding-left: 20px; margin: 0; font-size: 13px; }
+        li { margin-bottom: 6px; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <div class="sidebar">
+        <h2>Victoria Restaurants</h2>
+        <p style="font-size: 12px; color: #666;">Click markers for details!</p>
+        <ul id="list"></ul>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([48.4284, -123.3656], 15);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        var restaurants = [
+            { name: "Red Fish Blue Fish", lat: 48.4251, lng: -123.3713, desc: "1006 Wharf Street - Iconic waterfront seafood" },
+            { name: "Red Barn Market", lat: 48.4190, lng: -123.3742, desc: "325 Menzies St - Classic grocery & sandwich bar" },
+            { name: "Tacofino Victoria", lat: 48.4278, lng: -123.3635, desc: "760 Pandora Ave - West coast tacos & burritos" },
+            { name: "Brickyard Pizza", lat: 48.4275, lng: -123.3621, desc: "784 Yates St - Pizza & lunch specials" },
+            { name: "Burger Crush", lat: 48.4243, lng: -123.3632, desc: "787 Fort St - Burgers, fries & vegan options" },
+            { name: "The Bop Korean Restaurant", lat: 48.4192, lng: -123.3789, desc: "239 Menzies St - Korean food in James Bay" },
+            { name: "Flying Otter Grill", lat: 48.4230, lng: -123.3725, desc: "950 Wharf St - Casual waterfront dining" },
+            { name: "Milestones", lat: 48.4246, lng: -123.3719, desc: "812 Wharf St - Waterfront harbor views" },
+            { name: "Bartholomew's Public House", lat: 48.4232, lng: -123.3654, desc: "777 Douglas St - British-style pub" },
+            { name: "Cactus Club Cafe", lat: 48.4258, lng: -123.3648, desc: "1125 Douglas St - Modern pub food" },
+            { name: "Browns Socialhouse", lat: 48.4234, lng: -123.3655, desc: "809 Douglas St - Close to Parliament Buildings" },
+            { name: "The Bent Mast", lat: 48.4152, lng: -123.3821, desc: "512 Simcoe St - James Bay local pub" },
+            { name: "Blue Fox Cafe", lat: 48.4238, lng: -123.3619, desc: "919 Fort St - Beloved breakfast & brunch" },
+            { name: "Jam Cafe", lat: 48.4299, lng: -123.3652, desc: "542 Herald St - Farmhouse breakfast spot" },
+            { name: "Heron Rock Bistro", lat: 48.4150, lng: -123.3812, desc: "435 Simcoe St - James Bay diner" },
+            { name: "Pagliacci's", lat: 48.4277, lng: -123.3662, desc: "1011 Broad St - House-made pasta & lively vibe" },
+            { name: "Ithaka Greek Restaurant", lat: 48.4225, lng: -123.3631, desc: "716 Burdett Ave - Authentic Greek cuisine" },
+            { name: "Finn's Seafood Chops Cocktails", lat: 48.4259, lng: -123.3715, desc: "1208 Wharf St - Waterfront historic building" },
+            { name: "Nubo Japanese Tapas", lat: 48.4242, lng: -123.3635, desc: "765 Fort St - Staple sushi restaurant" },
+            { name: "Zambri's", lat: 48.4273, lng: -123.3614, desc: "820 Yates St - Contemporary Italian" },
+            { name: "Boom + Batten", lat: 48.4195, lng: -123.3845, desc: "2 Paul Kane Pl - Panoramic harbor views" },
+            { name: "Wind Cries Mary", lat: 48.4252, lng: -123.3687, desc: "45 Bastion Square - Modern local cuisine" },
+            { name: "Il Terrazzo Ristorante", lat: 48.4282, lng: -123.3671, desc: "555 Johnson St - Fine dining & courtyard patio" },
+            { name: "Good Earth Coffeehouse", lat: 48.4221, lng: -123.3664, desc: "1150 Douglas St - Beside Parliament Buildings" },
+            { name: "Hey Happy", lat: 48.4285, lng: -123.3668, desc: "560 Johnson St - Trendy downtown cafe" },
+            { name: "Discovery Coffee", lat: 48.4187, lng: -123.3768, desc: "281 Menzies St - James Bay village" },
+            { name: "Moka House Coffee", lat: 48.4194, lng: -123.3491, desc: "345 Cook St - Cook Street Village cafe" }
+        ];
+
+        var listEl = document.getElementById('list');
+
+        restaurants.forEach(function(r) {
+            var marker = L.marker([r.lat, r.lng]).addTo(map);
+            marker.bindPopup("<b>" + r.name + "</b><br>" + r.desc);
+
+            var li = document.createElement('li');
+            li.innerHTML = "<a href='#' style='text-decoration: none; color: #0066cc;'>" + r.name + "</a>";
+            li.onclick = function(e) {
+                e.preventDefault();
+                map.setView([r.lat, r.lng], 17);
+                marker.openPopup();
+            };
+            listEl.appendChild(li);
+        });
+    </script>
+</body>
+</html>
